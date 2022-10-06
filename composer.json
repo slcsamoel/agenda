@@ -1,0 +1,12 @@
+{
+    "name": "samoel/api-mosyle",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App"
+        },
+        "files": [
+            "config.php" 
+        ]
+    },
+    "require": {}
+}
