@@ -37,17 +37,20 @@
                             $user = User::logar($_POST['email'] , $_POST['senha']);
                             $token = self::createToken($user['email'] , $user['name']);
 
-                            echo $this->view->renderHtml('painel.php', ['error' => 'Informe todos os dados!']);
+
+                            $_SESSION['usuario'] = $user;
+
+                            echo $this->view->renderHtml('painel.php', ['user' =>  $user]);
+                        }else{
+                            echo $this->view->renderHtml('home.php', ['error' => 'Senha Errada!']);   
                         }
-                    
-                        echo $this->view->renderHtml('painel.php', ['error' => 'Usuario não existe!']); 
                           
+                    }else{
+
+                        echo $this->view->renderHtml('home.php', ['error' => 'Usuario não existe!']); 
                     }         
 
             }
-
-            echo $this->view->renderHtml('painel.php', ['error' => 'Informe todos os dados!']);
-            
 
         }
 

@@ -1,16 +1,15 @@
 <?php
 
-    //var_dump($_SERVER);
-
+    session_start();
     //header('Content-Type: application/json; charset=UTF-8');
     require_once '../vendor/autoload.php';
     use App\Request;
 
-    var_dump($_REQUEST);
+    ///var_dump($_REQUEST);
 
-    if (isset($_REQUEST) && !empty($_REQUEST)) {
+    if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
 
-        $rest = new Request($_REQUEST);
+        $rest = new Request($_SERVER['REQUEST_URI']);
         echo $rest->run();
 
 	}

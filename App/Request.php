@@ -7,11 +7,13 @@
         private $request;
         private $class;
         private $params = array();
+		private $userLogado;
 
 
         public function __construct($req)
         {
             $this->request = $req;
+			$this->userLogado = $_SESSION['usuario'];
             $this->load();
 
         }
@@ -19,10 +21,14 @@
 
         public function load()
 		{
-			$newUrl = explode('/', $this->request['url']);
+
+			//$newUrl = explode('/', $this->request['url']); // servidor apache
+
+			$newUrl = explode('/', $this->request);
 			array_shift($newUrl);
 
 			if(empty($newUrl[0])){
+				
 				$newUrl[0] = 'login';
 			}
 
@@ -53,9 +59,8 @@
 
 					$response = call_user_func_array(array(new $controll, $this->method), $this->params);
 
-					//return json_encode(array('data' => $response, 'status' => 'sucess'));
-
 				} catch (\Exception $e) {
+
 					return json_encode(array('data' => $e->getMessage(), 'status' => 'error'));
 				}
 				

@@ -4,7 +4,7 @@
     
     class User
     {
-        private static $table = 'users';
+        private static $table = 'usuarios';
 
 
         public static function find($id){
@@ -45,30 +45,34 @@
         }
 
         public static function logar($email, $senha){
-            $connPdo = new \PDO(DBDRIVE.': host='.DBHOST.'; dbname='.DBNAME , DBUSER, DBPASS);
-            $senha = md5($senha);
+
+        
+                $connPdo = new \PDO(DBDRIVE.':host='.DBHOST.';dbname='.DBNAME.';port='.DBPORT, DBUSER, DBPASS);
+
+                $senha = md5($senha);
+        
+                $sql = 'SELECT U.* FROM '.self::$table.' AS  U WHERE email= :email AND senha= :senha';
+                $stmt = $connPdo->prepare($sql);
+                $stmt->bindValue(':email', $email);
+                $stmt->bindValue(':senha', strval($senha));
+                $stmt->execute();
+                
+                if($stmt->rowCount() > 0){
     
-            $sql = 'SELECT U.* FROM '.self::$table.' AS  U WHERE email= :email AND senha= :senha';
-            $stmt = $connPdo->prepare($sql);
-            $stmt->bindValue(':email', $email);
-            $stmt->bindValue(':senha', strval($senha));
-            $stmt->execute();
+                    return $stmt->fetch(\PDO::FETCH_ASSOC); 
+    
+                }else{
+    
+                    throw new \Exception("usuario não encontrado");
+                }
+
+          
             
-            if($stmt->rowCount() > 0){
-
-                return $stmt->fetch(\PDO::FETCH_ASSOC); 
-
-            }else{
-
-                throw new \Exception("usuario não encontrado");
-            }
-
-
         }
 
         public static function create($data)
         {
-            $connPdo = new \PDO(DBDRIVE.': host='.DBHOST.'; dbname='.DBNAME, DBUSER, DBPASS);
+            $connPdo = new \PDO(DBDRIVE.': host='.DBHOST.'; dbname='.DBNAME.';port='.DBPORT, DBUSER, DBPASS);
 
             $sql = 'INSERT INTO '.self::$table.' (email, password, name) VALUES (:em, :pa, :na)';
             $stmt = $connPdo->prepare($sql);
@@ -126,7 +130,8 @@
         }
 
         public static function verificationUserExist($email){
-            $connPdo = new \PDO(DBDRIVE.': host='.DBHOST.'; dbname='.DBNAME , DBUSER, DBPASS);
+
+            $connPdo = new \PDO(DBDRIVE.':host='.DBHOST.';dbname='.DBNAME.';port='.DBPORT, DBUSER, DBPASS);
 
             $sql = 'SELECT *  FROM '.self::$table.' WHERE email= :email';
             $stmt = $connPdo->prepare($sql);
